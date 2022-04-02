@@ -30,9 +30,23 @@ namespace Validation
 
 	////////////////////////////////////////////////////////////
 	template <typename TObject>
-	ValidationResult Validatable<TObject>::Validate() const
+	const ValidationResult& Validatable<TObject>::Validate(bool possibleDataChange) const
 	{
-		return CreateValidator().Validate(static_cast<const TObject&>(*this));
+		if(possibleDataChange || !cache.Updated)
+		{
+			cache.Result = CreateValidator().Validate(static_cast<const TObject&>(*this));
+			cache.Updated = true;
+		}
+		
+		return cache.Result;
 	}
+
+	////////////////////////////////////////////////////////////
+	template <typename TObject>
+	void Validatable<TObject>::NotifyDataChange() const
+	{
+		cache.Updated = false;
+	}
+
 
 }

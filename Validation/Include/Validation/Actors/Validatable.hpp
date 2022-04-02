@@ -57,10 +57,29 @@ namespace Validation
 		virtual Validator<TObject> CreateValidator() const = 0;
 
 		////////////////////////////////////////////////////////////
-		/// \brief Creates the validator and validates it.
+		/// \brief Validates the validator.
 		/// 
 		////////////////////////////////////////////////////////////
-		ValidationResult Validate() const;
+		const ValidationResult& Validate(bool possibleDataChange = false) const;
+
+		////////////////////////////////////////////////////////////
+		/// \brief Ensures that the validation will be re-invoked
+		///		   next time retrieving the validation result data.
+		/// 
+		////////////////////////////////////////////////////////////
+		void NotifyDataChange() const;
+
+	private:
+
+		////////////////////////////////////////////////////////////
+		/// \brief Cache
+		/// 
+		////////////////////////////////////////////////////////////
+		mutable struct ValidationCache
+		{
+			ValidationResult Result	= {};
+			bool Updated			= false;
+		} cache;
 
 	};
 }

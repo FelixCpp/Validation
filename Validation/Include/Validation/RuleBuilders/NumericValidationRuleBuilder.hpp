@@ -60,6 +60,8 @@ namespace Validation
 		NumericValidationRuleBuilder& Lower(Numeric value, OptionalErrorText errorText = std::nullopt);
 		NumericValidationRuleBuilder& Greater(Numeric value, OptionalErrorText errorText = std::nullopt);
 		NumericValidationRuleBuilder& Between(Numeric min, Numeric max, OptionalErrorText errorText = std::nullopt);
+		NumericValidationRuleBuilder& Equal(Numeric value, OptionalErrorText errorText = std::nullopt);
+		NumericValidationRuleBuilder& NotEqual(Numeric value, OptionalErrorText errorText = std::nullopt);
 
 		////////////////////////////////////////////////////////////
 		/// \brief Validates the rules of the rule builder and

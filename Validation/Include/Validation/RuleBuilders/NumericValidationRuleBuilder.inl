@@ -70,6 +70,24 @@ namespace Validation
 	}
 
 	template <typename TObject, typename TValue>
+	NumericValidationRuleBuilder<TObject, TValue>& NumericValidationRuleBuilder<TObject, TValue>::Equal(Numeric value, OptionalErrorText errorText)
+	{
+		return Must([value](const Numeric& parameter)
+		{
+			return parameter == value;
+		}, errorText);
+	}
+
+	template <typename TObject, typename TValue>
+	NumericValidationRuleBuilder<TObject, TValue>& NumericValidationRuleBuilder<TObject, TValue>::NotEqual(Numeric value, OptionalErrorText errorText)
+	{
+		return Must([value](const Numeric& parameter)
+		{
+			return parameter != value;
+		}, errorText);
+	}
+
+	template <typename TObject, typename TValue>
 	RuleBuilderValidationResult NumericValidationRuleBuilder<TObject, TValue>::Validate(const TObject& object) const
 	{
 		const Numeric& value = object.*attribute;
