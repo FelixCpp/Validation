@@ -48,6 +48,16 @@ namespace Validation
 
 	////////////////////////////////////////////////////////////
 	template <typename TObject>
+	template <typename TValue>
+	NumericValidationRuleBuilder<TObject, TValue>& Validator<TObject>::RuleFor(const TValue TObject::* attribute)
+	{
+		auto* ruleBuilder = new NumericValidationRuleBuilder<TObject, TValue>(*this, attribute);
+		ruleBuilders.emplace_back(ruleBuilder);
+		return *ruleBuilder;
+	}
+
+	////////////////////////////////////////////////////////////
+	template <typename TObject>
 	ValidationResult Validator<TObject>::Validate(const TObject& object) const
 	{
 		ValidationResult result;

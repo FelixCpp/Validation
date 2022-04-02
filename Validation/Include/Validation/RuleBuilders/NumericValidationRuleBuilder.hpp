@@ -25,49 +25,45 @@
 
 #pragma once
 
-#include "../Results/ValidationResult.hpp"
-#include "../RuleBuilders/ValidationRuleBuilder.hpp"
-#include "../RuleBuilders/StringValidationRuleBuilder.hpp"
-#include "../RuleBuilders/NumericValidationRuleBuilder.hpp"
+#include "ValidationRuleBuilder.hpp"
+#include "../Rules/IValidationRule.hpp"
 
 #include <memory>
-#include <list>
+#include <vector>
 
 namespace Validation
 {
-	////////////////////////////////////////////////////////////
-	/// \brief Define Validator class that is intended to be
-	///		   used as a builder to rule-builders.
-	///
-	/// \tparam TObject The object to validate.
-	///
-	////////////////////////////////////////////////////////////
-	template<typename TObject>
-	class Validator
+
+	template<typename TObject, typename TValue>
+	class NumericValidationRuleBuilder final : public ValidationRuleBuilder<TObject>
 	{
 	public:
 
-		StringValidationRuleBuilder<TObject, char>& RuleFor(const std::string TObject::* attribute);
-		StringValidationRuleBuilder<TObject, wchar_t>& RuleFor(const std::wstring TObject::* attribute);
-
-		template <typename TValue>
-		NumericValidationRuleBuilder<TObject, TValue>& RuleFor(const TValue TObject::* attribute);
-
 		////////////////////////////////////////////////////////////
-		/// \brief Validates each rule builder and packs the results
-		///		   in a single ValidationResult object.
-		///
-		///	\return A packed ValidationResult that contains each
-		///			error of each rule-builder.
+		/// Type definitions
 		/// 
 		////////////////////////////////////////////////////////////
-		ValidationResult Validate(const TObject& object) const;
+		using Numeric	= TValue;
+		using Attribute = const Numeric TObject::*;
+
+	public:
 
 		////////////////////////////////////////////////////////////
-		/// \brief Check the validation for success.
+		/// \brief Construct a numeric validation rule builder
+		///		   with associated validator.
 		/// 
 		////////////////////////////////////////////////////////////
-		bool IsValid() const;
+		explicit NumericValidationRuleBuilder(Validator<TObject>& validator, Attribute attribute);
+
+		template<typename TPredicate>
+		NumericValidationRuleBuilder& Must(TPredicate predicate, OptionalErrorText errorText = std::nullopt);
+
+		////////////////////////////////////////////////////////////
+		/// \brief Validates the rules of the rule builder and
+		///		   returns a packed result type.
+		/// 
+		////////////////////////////////////////////////////////////
+		virtual RuleBuilderValidationResult Validate(const TObject& object) const override;
 
 	private:
 
@@ -75,9 +71,10 @@ namespace Validation
 		/// Member data
 		/// 
 		////////////////////////////////////////////////////////////
-		std::list<std::shared_ptr<ValidationRuleBuilder<TObject>>> ruleBuilders;
+		Attribute attribute;
+		std::vector<std::unique_ptr<IValidationRule<Numeric>>> rules;
 
 	};
 }
 
-#include "Validator.inl"
+#include "NumericValidationRuleBuilder.inl"
