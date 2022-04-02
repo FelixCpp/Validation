@@ -62,9 +62,12 @@ namespace Validation
 		template<typename TPredicate>
 		StringValidationRuleBuilder& Must(TPredicate predicate, OptionalErrorText errorText = std::nullopt);
 		StringValidationRuleBuilder& NotEmpty(OptionalErrorText errorText = std::nullopt);
+		StringValidationRuleBuilder& NotEmptyOrWhitespace(OptionalErrorText errorText = std::nullopt);
 		StringValidationRuleBuilder& IsEmpty(OptionalErrorText errorText = std::nullopt);
 		StringValidationRuleBuilder& Equals(const String& value, OptionalErrorText errorText = std::nullopt);
-
+		StringValidationRuleBuilder& MinLength(size_t length, OptionalErrorText errorText = std::nullopt);
+		StringValidationRuleBuilder& MaxLength(size_t length, OptionalErrorText errorText = std::nullopt);
+		
 		////////////////////////////////////////////////////////////
 		/// \brief Validates the rules of the rule builder and
 		///		   returns a packed result type.
