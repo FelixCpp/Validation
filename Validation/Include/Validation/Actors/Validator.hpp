@@ -29,6 +29,7 @@
 #include "../RuleBuilders/ValidationRuleBuilder.hpp"
 #include "../RuleBuilders/StringValidationRuleBuilder.hpp"
 #include "../RuleBuilders/NumericValidationRuleBuilder.hpp"
+#include "../RuleBuilders/ValidatableValidationRuleBuilder.hpp"
 
 #include <memory>
 #include <list>
@@ -52,6 +53,9 @@ namespace Validation
 
 		template <typename TValue>
 		NumericValidationRuleBuilder<TObject, TValue>& RuleFor(const TValue TObject::* attribute);
+
+		template <typename TValue>
+		ValidatableValidationRuleBuilder<TObject, TValue>& Validated(const TValue TObject::* attribute);
 
 		////////////////////////////////////////////////////////////
 		/// \brief Validates each rule builder and packs the results

@@ -56,6 +56,16 @@ namespace Validation
 		return *ruleBuilder;
 	}
 
+	template <typename TObject>
+	template <typename TValue>
+	ValidatableValidationRuleBuilder<TObject, TValue>& Validator<TObject>::Validated(const TValue TObject::* attribute)
+	{
+		using ValidatedObjectType = typename TValue::Object;
+		auto* ruleBuilder = new ValidatableValidationRuleBuilder<TObject, ValidatedObjectType>(*this, attribute);
+		ruleBuilders.emplace_back(ruleBuilder);
+		return *ruleBuilder;
+	}
+
 	////////////////////////////////////////////////////////////
 	template <typename TObject>
 	ValidationResult Validator<TObject>::Validate(const TObject& object) const

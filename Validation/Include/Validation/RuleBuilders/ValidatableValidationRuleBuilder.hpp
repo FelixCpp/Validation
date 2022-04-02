@@ -25,65 +25,57 @@
 
 #pragma once
 
-#include "Validator.hpp"
-#include "../Results/ValidationResult.hpp"
+#include "ValidationRuleBuilder.hpp"
+
+#include <memory>
+#include <vector>
 
 namespace Validation
 {
+	template <typename TObject>
+	class Validatable;
+
 	////////////////////////////////////////////////////////////
-	/// \brief Define Validatable base class that lets the
-	///		   library create a validation for the object.
-	///
-	///	\tparam TObject The object type to validate.
+	/// \brief Define validation rule builder for validatables.
 	/// 
 	////////////////////////////////////////////////////////////
-	template<typename TObject>
-	class Validatable
+	template<typename TObject, typename TValue>
+	class ValidatableValidationRuleBuilder final : public ValidationRuleBuilder<TObject>
 	{
 	public:
 
-		using Object = TObject;
-
-		//static_assert(std::is_base_of_v<Validatable<TObject>, TObject>, "TObject must derive from Validatable<TObject>.");
-
 		////////////////////////////////////////////////////////////
-		/// \brief Default destructor
+		/// Type definitions
 		/// 
 		////////////////////////////////////////////////////////////
-		virtual ~Validatable() = default;
+		using Value		= TValue;
+		using Attribute = const Value TObject::*;
+
+	public:
 
 		////////////////////////////////////////////////////////////
-		/// \brief Constructs a validation for the main object.
+		/// \brief Construct a numeric validation rule builder
+		///		   with associated validator.
 		/// 
 		////////////////////////////////////////////////////////////
-		virtual Validator<TObject> CreateValidator() const = 0;
-
+		explicit ValidatableValidationRuleBuilder(Validator<TObject>& validator, Attribute attribute);
+		
 		////////////////////////////////////////////////////////////
-		/// \brief Validates the validator.
+		/// \brief Validates the rules of the rule builder and
+		///		   returns a packed result type.
 		/// 
 		////////////////////////////////////////////////////////////
-		const ValidationResult& Validate(bool possibleDataChange = false) const;
-
-		////////////////////////////////////////////////////////////
-		/// \brief Ensures that the validation will be re-invoked
-		///		   next time retrieving the validation result data.
-		/// 
-		////////////////////////////////////////////////////////////
-		void NotifyDataChange() const;
+		virtual RuleBuilderValidationResult Validate(const TObject& object) const override;
 
 	private:
 
 		////////////////////////////////////////////////////////////
-		/// \brief Cache
+		/// Member data
 		/// 
 		////////////////////////////////////////////////////////////
-		mutable struct ValidationCache
-		{
-			ValidationResult Result	= {};
-			bool Updated			= false;
-		} cache;
-
+		Attribute attribute;
+		
 	};
 }
 
-#include "Validatable.inl"
+#include "ValidatableValidationRuleBuilder.inl"
