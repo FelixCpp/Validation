@@ -49,73 +49,55 @@ namespace Validation
 	template <typename TObject, typename TChar>
 	StringValidationRuleBuilder<TObject, TChar>& StringValidationRuleBuilder<TObject, TChar>::NotEmpty(OptionalErrorText errorText)
 	{
-		static const auto notEmptyPredicate = [](const String& value)
+		return Must([](const String& value)
 		{
 			return !value.empty();
-		};
-
-		rules.push_back(std::make_unique<MustValidationRule<String, decltype(notEmptyPredicate)>>(notEmptyPredicate, std::move(errorText)));
-		return *this;
+		}, errorText);
 	}
 
 	template <typename TObject, typename TChar>
 	StringValidationRuleBuilder<TObject, TChar>& StringValidationRuleBuilder<TObject, TChar>::NotEmptyOrWhitespace(OptionalErrorText errorText)
 	{
-		static const auto notEmptyOrWhitespacePredicate = [](const String& value)
+		return Must([](const String& value)
 		{
 			return !(value.empty() || std::ranges::all_of(value, std::isspace));
-		};
-
-		rules.push_back(std::make_unique<MustValidationRule<String, decltype(notEmptyOrWhitespacePredicate)>>(notEmptyOrWhitespacePredicate, std::move(errorText)));
-		return *this;
+		}, errorText);
 	}
 
 	template <typename TObject, typename TChar>
 	StringValidationRuleBuilder<TObject, TChar>& StringValidationRuleBuilder<TObject, TChar>::IsEmpty(OptionalErrorText errorText)
 	{
-		static const auto isEmptyPredicate = [](const String& value)
+		return Must([](const String& value)
 		{
 			return value.empty();
-		};
-
-		rules.push_back(std::make_unique<MustValidationRule<String, decltype(isEmptyPredicate)>>(isEmptyPredicate, std::move(errorText)));
-		return *this;
+		}, errorText);
 	}
 
 	template <typename TObject, typename TChar>
 	StringValidationRuleBuilder<TObject, TChar>& StringValidationRuleBuilder<TObject, TChar>::Equals(const String& value, OptionalErrorText errorText)
 	{
-		const auto equalsPredicate = [value](const String& parameter)
+		return Must([value](const String& parameter)
 		{
 			return parameter == value;
-		};
-
-		rules.push_back(std::make_unique<MustValidationRule<String, decltype(equalsPredicate)>>(equalsPredicate, std::move(errorText)));
-		return *this;
+		}, errorText);
 	}
 
 	template <typename TObject, typename TChar>
 	StringValidationRuleBuilder<TObject, TChar>& StringValidationRuleBuilder<TObject, TChar>::MinLength(size_t length, OptionalErrorText errorText)
 	{
-		const auto minLengthPredicate = [length](const String& parameter)
+		return Must([length](const String& parameter)
 		{
 			return parameter.length() >= length;
-		};
-
-		rules.push_back(std::make_unique<MustValidationRule<String, decltype(minLengthPredicate)>>(minLengthPredicate, std::move(errorText)));
-		return *this;
+		}, errorText);
 	}
 
 	template <typename TObject, typename TChar>
 	StringValidationRuleBuilder<TObject, TChar>& StringValidationRuleBuilder<TObject, TChar>::MaxLength(size_t length, OptionalErrorText errorText)
 	{
-		const auto maxLengthPredicate = [length](const String& parameter)
+		return Must([length](const String& parameter)
 		{
 			return parameter.length() <= length;
-		};
-
-		rules.push_back(std::make_unique<MustValidationRule<String, decltype(maxLengthPredicate)>>(maxLengthPredicate, std::move(errorText)));
-		return *this;
+		}, errorText);
 	}
 
 

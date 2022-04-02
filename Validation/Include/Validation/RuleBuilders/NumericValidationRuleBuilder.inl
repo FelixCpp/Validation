@@ -43,6 +43,33 @@ namespace Validation
 	}
 
 	template <typename TObject, typename TValue>
+	NumericValidationRuleBuilder<TObject, TValue>& NumericValidationRuleBuilder<TObject, TValue>::Lower(Numeric value, OptionalErrorText errorText)
+	{
+		return Must([value](const Numeric& parameter)
+		{
+			return parameter < value;
+		}, errorText);
+	}
+
+	template <typename TObject, typename TValue>
+	NumericValidationRuleBuilder<TObject, TValue>& NumericValidationRuleBuilder<TObject, TValue>::Greater(Numeric value, OptionalErrorText errorText)
+	{
+		return Must([value](const Numeric& parameter)
+		{
+			return parameter > value;
+		}, errorText);
+	}
+
+	template <typename TObject, typename TValue>
+	NumericValidationRuleBuilder<TObject, TValue>& NumericValidationRuleBuilder<TObject, TValue>::Between(Numeric min, Numeric max, OptionalErrorText errorText)
+	{
+		return Must([min, max](const Numeric& value)
+		{
+			return value >= min && value <= max;
+		}, errorText);
+	}
+
+	template <typename TObject, typename TValue>
 	RuleBuilderValidationResult NumericValidationRuleBuilder<TObject, TValue>::Validate(const TObject& object) const
 	{
 		const Numeric& value = object.*attribute;

@@ -57,6 +57,9 @@ namespace Validation
 
 		template<typename TPredicate>
 		NumericValidationRuleBuilder& Must(TPredicate predicate, OptionalErrorText errorText = std::nullopt);
+		NumericValidationRuleBuilder& Lower(Numeric value, OptionalErrorText errorText = std::nullopt);
+		NumericValidationRuleBuilder& Greater(Numeric value, OptionalErrorText errorText = std::nullopt);
+		NumericValidationRuleBuilder& Between(Numeric min, Numeric max, OptionalErrorText errorText = std::nullopt);
 
 		////////////////////////////////////////////////////////////
 		/// \brief Validates the rules of the rule builder and
